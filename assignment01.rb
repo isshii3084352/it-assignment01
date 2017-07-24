@@ -1,11 +1,16 @@
 #class Vendingmachine < ???
 
+## Drinkと自販機のコードが一つにまとまっているため、見づらい
+## Drink_ClassとMachine_Classのように分けて、各メソッドを書いた方が見やすいのでは
+
   #初期設定
   @partition = "--------------------"
   @input_sum = 0
   @change = 0
   @Lack_of_currency = true
   @random_status = ""
+  ## 初期設定ではコーラのみを入れる
+  ## Drink Classを作った方が見やすい
   @products = {
     "コーラ": { name: "コーラ", price: 120, stock: 5, status: "Lack of money", available: "NG"},
     "レッドブル": { name: "レッドブル", price: 200, stock: 5, status: "Lack of money", available: "NG"},
@@ -89,6 +94,13 @@
   end
 
   # choose(選択)：ユーザーが購入する商品を選ぶ。ただし、投入金額不足、あるいは在庫不足の場合、購入できない。
+
+  # random purchaseとpurchaseメソッドを分ける
+  # def purchase 
+  # end 
+  # def random purchase 
+  # end 
+
   def choose
     currency_judgment
     status_update
@@ -172,6 +184,7 @@
   end
   
   # done_purchase：購入後処理。投入金額は商品価格に応じて減った後、全額が釣り銭になる。在庫は1減る。
+  # purchaseメソッドにいれてあげる
   def done_purchase(juice)
     change_action(juice)
     @input_sum -= @products[juice][:price]
@@ -197,6 +210,7 @@
   end
   
   # status_update(状態更新)：購入可能なのか、投入金額不足か、在庫切れか。商品ごとの状態を更新。
+  # 毎回status_updateがなくても,書くコード内で更新されるようにする
   def status_update
     @products.each_key { |juice|
       if @products[juice][:price] > @input_sum
@@ -226,6 +240,7 @@
 
   # currency_judgment(釣り銭判定)：まず、それぞれのジュースにて、販売価格よりも投入価格の方が大きいか評価。
   # 小さい場合、釣り銭が足りるか足りないか以前の話しなので、ここで処理終了。
+  # Vending_Machine Class を作って、そちらにこのコードを書いた方が見やすい
   def currency_judgment
     @products.each_key { |juice|
       if @products[juice][:price] < @input_sum
